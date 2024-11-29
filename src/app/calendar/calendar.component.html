@@ -1,0 +1,44 @@
+<div class="calendar">
+  <div class="header">
+    <button (click)="prevMonth()">&#9664;</button>
+    <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+    <button (click)="nextMonth()">&#9654;</button>
+  </div>
+
+  <div class="weekdays">
+    <div *ngFor="let day of weekdays" class="weekday">{{ day }}</div>
+  </div>
+
+  <div class="days">
+    <div *ngFor="let _ of emptyDays" class="day empty"></div>
+
+    <div
+      *ngFor="let day of daysInMonth; let i = index"
+      [ngClass]="{ 'weekend': isWeekend(i + 1), 'today': isToday(i + 1) }"
+      class="day"
+    >
+      <span>{{ day }}</span>
+      
+      <!-- "+" Symbol, um eine Notiz hinzuzufügen -->
+      <button (click)="showNoteInput(day)">+</button>
+
+      <!-- Zeigt das Notizfeld an, wenn eine Notiz für den Tag vorhanden ist -->
+      <div *ngIf="notes[day]" class="note">
+        <div *ngFor="let note of notes[day]; let index = index" class="note-item">
+          <p>{{ note }}</p>
+          <button (click)="deleteNote(day, index)">-</button>
+        </div>
+      </div>
+
+      <!-- Eingabefeld für Notizen (wird sichtbar, wenn der Benutzer auf "+" klickt) -->
+      <div *ngIf="isNoteInputVisible(day)" class="note-input">
+        <input
+          [(ngModel)]="noteInput[day]"
+          type="text"
+          placeholder="Notiz hinzufügen..."
+        />
+        <button (click)="addNote(day, noteInput[day])">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
